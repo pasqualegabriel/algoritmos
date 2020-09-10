@@ -1,3 +1,18 @@
+const sum = xs => {
+  if(xs.length === 0) return 0
+  if(xs.length === 1) return xs[0]
+  const left = xs.slice(0, Math.floor(xs.length/2))
+  const right = xs.slice(Math.floor(xs.length/2), xs.length)
+  return sum(left) + sum(right) 
+}
+
+const leftMiddle = xs => {
+  if(xs.length < 2) return true
+  const left = xs.slice(0, Math.floor(xs.length/2))
+  const right = xs.slice(Math.floor(xs.length/2), xs.length)
+  return sum(left) > sum(right) && leftMiddle(left) && leftMiddle(right)
+}
+
 const creciente2 = (xs, i = 0) => {
   if(xs.length === 0) return false
   if(xs.length === 1) return i+1 === xs[0]
@@ -32,7 +47,34 @@ c1 < 1 < c2
 c <= n FALSO
 
 */
+const potencia = (n,e) => {
+  if(e == 0) return 1
+  if(e < 0) return 1/potencia(n, -1*e)
+  
+  const part1 = potencia(n, Math.floor(e/2))
+
+  return e % 2 === 0 ? part1 * part1 : part1 * part1 * n 
+}
+
+// n > 0
+const potenciaMatriz2 = (a, n, i = 0) => {
+
+  if(n === 1) return a
+
+  return potencia(a, n) + potenciaMatriz2(a, n-1)
+}
+
+// A 1 + A 2 + . . . + A n
+const potenciaMatriz = (a, n, i = 0) => {
+
+  if(n === 1) return a
+
+  return potencia(a, n) + potenciaMatriz(a, n-1)
+}
 
 module.exports = {
-  creciente
+  creciente,
+  potenciaMatriz,
+  leftMiddle,
+  sum
 }
