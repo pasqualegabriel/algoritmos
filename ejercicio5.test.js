@@ -14,4 +14,5 @@ test('test 1', () => {
   expect(potenciaN(2, 2)).toBe(6)
   expect(potenciaN(2, 4)).toBe(30)
   expect(potenciaN(2, 8)).toBe(510)
+  expect(potenciaN(3, 4)).toBe(120)
 })

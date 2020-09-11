@@ -7,16 +7,12 @@ const potencia = (n, e) => {
   return e % 2 === 0 ? res : res * n
 }
 
-// m = matriz o nro, e = end, i = init
-const potenciaN = (m, e, i = 0) => {
-  // if(e-i < 0) return -1 / potenciaN(m, -1 * e)
-  if(e-i === 0) return potencia(m, e)
-  if(e-i === 1) {
-    const one = i === 0 ? 0 : potencia(m, i)
-    return one + potencia(m, e)
-  }
-  const mitad = Math.floor((e-i)/2)+i
-  return potenciaN(m, mitad, i) + potenciaN(m, e, mitad +1)
+const potenciaN = (a, n) => {
+  if(n === 1) return a
+  if(n === 2) return a + potencia(a, 2)
+  const mitad = Math.floor(n/2)
+  const part = potenciaN(a, mitad)
+  return part + potencia(a, mitad) * part
 }
 
 module.exports = {
