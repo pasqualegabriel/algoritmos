@@ -118,3 +118,5 @@ GeoIP2-Country.mmdb
 doc/main.*
 /doc/swagger.*
 /doc/docs.pdf
+
+jupyter/.ipynb_checkpoints
