@@ -12,6 +12,17 @@ const busquedaBinaria = (xs, e) => {
     : busquedaBinaria(right, e)
 }
 /*
+en python
+def busqueda_binaria(xs, e):
+    if len(xs) <= 1:
+        return len(xs) == 1 and xs[0] == e # O(1)
+    middle = math.floor(len(xs)/2) # O(1)
+    left = xs[slice(0, middle)] # O(1)
+    right = xs[slice(middle, len(xs))] # O(1)
+    if e < xs[middle]: # O(1)
+        return busqueda_binaria(left, e) 
+    return busqueda_binaria(right, e)
+
 a = 1, b = 2, f(n) = O(1)
 log_b(a) = 0
 n^log_2(1) = 1
@@ -47,6 +58,21 @@ const busquedaTernaria = (xs, e) => {
       : busquedaTernaria(thirdPart, e)
 }
 /*
+en python
+def busqueda_ternaria(xs, e):
+    if(len(xs) <= 2): # O(1)
+        return (len(xs) == 1 and xs[0] == e) or (len(xs) == 2 and xs[1] == e) # O(1)
+    unTercio = math.floor(len(xs)/3) # O(1)
+    dosTercios = math.floor(len(xs)*2/3) # O(1)
+    fisrtPart = xs[slice(0, unTercio)] # O(1)
+    secondPart = xs[slice(unTercio, dosTercios)] # O(1)
+    thirdPart = xs[slice(dosTercios, len(xs))] # O(1)
+    if e < xs[unTercio]: # O(1)
+        return busqueda_ternaria(fisrtPart, e)
+    if e < xs[dosTercios]: # O(1)
+        return busqueda_ternaria(secondPart, e)
+    return busqueda_ternaria(thirdPart, e)
+
 a = 1, b = 3, f(n) = O(1)
 log_b(a) = 0
 n^log_3(1) = 1
