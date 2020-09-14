@@ -66,3 +66,51 @@ test('ejercicio 5', () => {
   expect(potenciaN(2, 8)).toBe(510)
   expect(potenciaN(3, 4)).toBe(120)
 })
+
+// ejercicio 6
+const maxDepth = tree => { 
+  if(tree == null) return 0
+  const ldepth = maxDepth(tree.left)
+  const rdepth = maxDepth(tree.right)
+  return ldepth > rdepth ? ldepth + 1 : rdepth + 1
+} 
+   
+const longestPath = tree => { 
+  if (tree == null) return 0
+  const ldepth = maxDepth(tree.left)
+  const rdepth = maxDepth(tree.right)
+  const lLongPath = longestPath(tree.left)
+  const rLongPath = longestPath(tree.right)
+  return Math.max(ldepth + rdepth, Math.max(lLongPath, rLongPath))
+}
+
+test('ejercicio 6', () => {
+  const tree1 = {
+    left: {
+      right: {}
+    },
+    right: {
+      left: {},
+      right: { left: {} }
+    }
+  }
+  expect(longestPath()).toBe(0)
+  expect(longestPath(tree1)).toBe(5)
+  const tree2 = {
+    left: {
+      right: {
+        right: { 
+          right: {} 
+        }
+      },
+      left: {
+        right: { left: {} },
+        left: {}
+      }
+    },
+    right: {}
+  }
+  expect(longestPath(tree2)).toBe(6)
+  const tree3 = { right: {} }
+  expect(longestPath(tree3)).toBe(1)
+})
