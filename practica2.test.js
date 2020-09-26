@@ -114,3 +114,18 @@ test('ejercicio 6', () => {
   const tree3 = { right: {} }
   expect(longestPath(tree3)).toBe(1)
 })
+
+const pesar = () => true
+
+const pesadas = xs => { 
+  if (xs.length === 1) return xs[0]
+  const e = esImpar(xs.length) ? xs[0] : false
+  if(esImpar(xs.length)) xs = xs.slice(1, xs.length)
+  const middle = Math.floor(xs.length/2)
+  const left = xs.slice(0, middle)
+  const right = xs.slice(middle, xs.length)
+  const res = pesar(left, right)
+  return !res
+    ? e
+    : res === 1 ? pesadas(left) : pesadas(right)
+}
