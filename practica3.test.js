@@ -41,13 +41,38 @@ const sinColumna = m => m.map(e => e.slice(1))
 
 const sinFila = m => m.slice(1)
 
-const menor = (m, i, j) => {
-  if(i === 1) {
-    return m[0].reduce((a, v) => a + v, 0)}
+const menor1 = (m, i, j) => {
+  if(i === 1) return m[0].reduce((a, v) => a + v, 0)
   if(j === 1) return m.reduce((a, v) => a + v[0], 0)
-  const left  = menor(sinColumna(m), i, j-1)
-  const right = menor(sinFila(m), i-1, j)
+  const left  = menor1(sinColumna(m), i, j-1)
+  const right = menor1(sinFila(m), i-1, j)
   return left < right ? m[0][0] + left : m[0][0] +  right
+}
+
+const menor = (m, i, j, c = {}) => {
+  if(i === 1) return m[0].reduce((a, v) => a + v, 0)
+  if(j === 1) return m.reduce((a, v) => a + v[0], 0)
+  // console.log(i, j-1)
+  // console.log(i-1, j)
+  // console.log(c)
+  let left
+  if(c[i] && c[i][j-1]) {
+    left = c[i][j-1]
+    console.log('NO CALCULO left')
+  } else {
+    c[i] = { ...c[i], [j-1]: menor(sinColumna(m), i, j-1, c) }
+    left = c[i][j-1]
+  }
+  let right
+  if(c[i-1] && c[i-1][j]) {
+    right = c[i-1][j]
+    console.log('NO CALCULO right')
+  } else {
+    c[i-1] = { ...c[i-1], [j]: menor(sinFila(m), i-1, j, c) }
+    right = c[i-1][j]
+  }
+  c[i][j] = left < right ? m[0][0] + left : m[0][0] +  right
+  return c[i][j]
 }
 
 test('ejercicio 3', () => {
