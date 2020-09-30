@@ -50,17 +50,14 @@ const menor1 = (m, i, j) => {
 }
 
 const menor = (m, i, j, c = {}) => {
-  if(i === 1) return m[0].reduce((a, v) => a + v, 0)
-  if(j === 1) return m.reduce((a, v) => a + v[0], 0)
-  // console.log(i, j-1)
-  // console.log(i-1, j)
-  // console.log(c)
+  if(i === 1) return m[0].reduce((a, v) => a + v, 0) // O(n)
+  if(j === 1) return m.reduce((a, v) => a + v[0], 0) // O(n)
   let left
   if(c[i] && c[i][j-1]) {
     left = c[i][j-1]
     console.log('NO CALCULO left')
   } else {
-    c[i] = { ...c[i], [j-1]: menor(sinColumna(m), i, j-1, c) }
+    c[i] = { ...c[i], [j-1]: menor(sinColumna(m), i, j-1, c) } // recursion
     left = c[i][j-1]
   }
   let right
@@ -68,51 +65,70 @@ const menor = (m, i, j, c = {}) => {
     right = c[i-1][j]
     console.log('NO CALCULO right')
   } else {
-    c[i-1] = { ...c[i-1], [j]: menor(sinFila(m), i-1, j, c) }
+    c[i-1] = { ...c[i-1], [j]: menor(sinFila(m), i-1, j, c) } // recursion
     right = c[i-1][j]
   }
   c[i][j] = left < right ? m[0][0] + left : m[0][0] +  right
   return c[i][j]
+}/*
+a=1 b=2 f(n)=O(n)
+log_b(a) = log_2(1) = 0
+
+b > log_b(a)
+f(n) = n^log_b(a) entonces estamos en el caso 3
+
+O(log(n))
+*/
+const menorBottomUp = (m, c = {}) => {
+  for(i=0; i<m.length; i++) {
+    for(j=0; j<m[0].length; j++) {
+      if(i === 0 && j === 0) c[0] = {0:m[0][0]}
+      else if(i === 0) c[0] = {...c[0], [j]:c[0][j-1]+m[i][j]}
+      else if(j === 0) c[i] = {...c[i], [j]:c[i-1][0]+m[i][j]}
+      else c[i] = {...c[i], [j]: c[i-1][j] < c[i][j-1] ? c[i-1][j] + m[i][j] : c[i][j-1] + m[i][j] }
+    }
+  }
+  return c[m.length-1][m[0].length-1]
 }
 
 test('ejercicio 3', () => {
-  expect(ej3([
+  expect(menorBottomUp([
     [2,1,7]
   ])).toBe(10)
-  expect(ej3([
+  expect(menorBottomUp([
     [2],[1],[7]
   ])).toBe(10)
 
-  expect(ej3([
+  expect(menorBottomUp([
     [2]
   ])).toBe(2)
 
-  expect(ej3([
+  expect(menorBottomUp([
     [2,1],
     [2,2]
   ])).toBe(5)
 
-  expect(ej3([
+  expect(menorBottomUp([
     [2,1,7],
     [2,5,4],
     [1,5,4]
   ])).toBe(14)
 
-  expect(ej3([
+  expect(menorBottomUp([
     [2,8,3,4],
     [5,3,4,5],
     [1,2,2,1],
     [3,4,6,5]
   ])).toBe(18)
 
-  expect(ej3([
+  expect(menorBottomUp([
     [2,4],
     [3,2],
     [3,9],
     [1,9]
   ])).toBe(18)
 
-  expect(ej3([
+  expect(menorBottomUp([
     [2,9,1,3],
     [3,2,2,1]
   ])).toBe(10)
