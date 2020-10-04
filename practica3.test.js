@@ -122,6 +122,13 @@ test('ejercicio 3', () => {
   ])).toBe(18)
 
   expect(menorBottomUp([
+    [2,1,9,4],
+    [8,8,9,5],
+    [1,2,9,1],
+    [1,1,1,5]
+  ])).toBe(19)
+
+  expect(menorBottomUp([
     [2,4],
     [3,2],
     [3,9],
