@@ -29,6 +29,48 @@ test('subsetSum2', () => {
   expect(subsetSum2([1,4,7,9], 13)).toBeTruthy()
 })
 
+const subsetSumTopDown = (xs, n, m, ys = {}) => {
+  if(m === 0) return true
+  if(n === -1) return false
+  if(!ys[n-1]) ys[n-1] = {}
+  if(!ys[n-1][m-xs[n]]) ys[n-1][m-xs[n]] = subsetSumTopDown(xs, n-1, m-xs[n], ys)
+  else console.log('ENTRE LEFT')
+  if(!ys[n-1][m]) ys[n-1][m] = subsetSumTopDown(xs, n-1, m, ys)
+  else console.log('ENTRE RIGHT')
+  return ys[n-1][m-xs[n]] || ys[n-1][m]
+}
+
+test('subsetSumTopDown', () => {
+  expect(subsetSumTopDown([1,4,7,9], 3, 6)).toBeFalsy()
+  expect(subsetSumTopDown([3,4,9], 2, 8)).toBeFalsy()
+  expect(subsetSumTopDown([1,4,7,9], 3, 5)).toBeTruthy()
+  expect(subsetSumTopDown([1,4,7,9], 3, 8)).toBeTruthy()
+  expect(subsetSumTopDown([1,4,7,9], 3, 14)).toBeTruthy()
+  expect(subsetSumTopDown([1,4,7,9], 3, 13)).toBeTruthy()
+})
+
+const subsetSumBottomUp = (xs, m) => {
+  const ys = {}
+  for(i=0;i<xs.length;i++) {
+    for(j=0;j<=m;j++) {
+      if(!ys[xs[i]]) ys[xs[i]] = {}
+      if(j===0) ys[xs[i]][j] = true
+      else if(i===0) ys[xs[i]][j] = xs[i] === j
+      else ys[xs[i]][j] = Boolean(ys[xs[i-1]] && (ys[xs[i-1]][j] || ys[xs[i-1]][j-xs[i]]))
+    }
+  }
+  return ys[xs[xs.length-1]][m]
+}
+
+test('subsetSumBottomUp', () => {
+  expect(subsetSumBottomUp([1,4,7,9], 6)).toBeFalsy()
+  expect(subsetSumBottomUp([3,4,9], 8)).toBeFalsy()
+  expect(subsetSumBottomUp([1,4,7,9], 5)).toBeTruthy()
+  expect(subsetSumBottomUp([1,4,7,9], 8)).toBeTruthy()
+  expect(subsetSumBottomUp([1,4,7,9], 14)).toBeTruthy()
+  expect(subsetSumBottomUp([1,4,7,9], 13)).toBeTruthy()
+})
+
 const potencia = (n, e) => {
   if(e < 0) return 1 / potencia(n, -1 * e)
   if(e === 0) return 1
@@ -45,7 +87,6 @@ const opretors = (xs, w, n) => {
   if(n === w || !xs.length) return false
   const e = xs[0]
   const ys = xs.slice(1)
-  console.log(xs.length, n)
   return opretors(ys, w, n+e) || opretors(ys, w, n*e) || opretors(ys, w, potencia(n, e))
 }
 
