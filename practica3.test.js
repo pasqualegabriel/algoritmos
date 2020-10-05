@@ -140,3 +140,61 @@ test('ejercicio 3', () => {
     [3,2,2,1]
   ])).toBe(10)
 })
+
+const potencia = (n, e) => {
+  if(e < 0) return 1 / potencia(n, -1 * e)
+  if(e === 0) return 1
+  const mitad = Math.floor(e/2)
+  const resM = potencia(n, mitad)
+  const res = resM * resM
+  return e % 2 === 0 ? res : res * n
+}
+
+const evaluar = xs => xs.reduce((a, v, i) => v === '+' ? a + xs[i+1] : v === '*' ? a * xs[i+1] : v === '^' ? potencia(a, xs[i+1]) : a, xs[0])
+
+const opretors = (xs, w, n) => {
+  if(n === w && !xs.length) return true
+  if(n === w || !xs.length) return false
+  const e = xs[0]
+  const ys = xs.slice(1)
+  return opretors(ys, w, n+e) || opretors(ys, w, n*e) || opretors(ys, w, potencia(n, e))
+}
+
+const ej4 = (xs, w) => opretors(xs.slice(1), w, xs[0])
+
+test('ejercicio 4 practica 3', () => {
+  expect(evaluar([4, '+', 2, '^', 2, '*', 3])).toBe(36*3)
+  expect(ej4([4, 2, 2, 3], 36*3)).toBeTruthy()
+  expect(ej4([4, 2, 2, 3], 11)).toBeTruthy()
+  expect(ej4([4, 2, 2, 3], 7)).toBeFalsy()
+})
+
+const ej6 = monto => [50, 20, 10, 5, 2, 1].reduce(
+  (a, v) => {
+    const cantV = Math.floor(a.monto / v)
+    return { cant: a.cant + cantV, monto: a.monto - (cantV * v) }
+  }, 
+  { cant: 0, monto }
+).cant
+
+test('ejercicio 6 practica 3', () => {
+  expect(ej6(50)).toBe(1)
+  expect(ej6(53)).toBe(3)
+  expect(ej6(39)).toBe(5)
+  expect(ej6(143)).toBe(6)
+})
+
+// const ej7 = (x, y, n) => {
+//   if(x === y && !n) return { status: true, cant: 0 }
+//   if(!n) return { status: false, cant: 0 }
+//   const p = n-1
+//   const r1 = ej7(x, y, n-1) // no cambia, +1
+//   const r2 = ej7(x, y, n-1) // cambiar, -1
+//   const r3 = ej7(x, y, n-1) // borrar, -2
+//   const r4 = ej7(x, y, n-1) // agregar, -3
+//   return Math.max([r1, r2, r3, r4]) 
+// }
+
+// test('ejercicio 7 practica 3', () => {
+//   expect(ej7('abbac', 'abcbc', 5)).toBe(1)
+// })
