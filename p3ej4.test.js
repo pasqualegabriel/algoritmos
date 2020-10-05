@@ -57,6 +57,7 @@ const subsetSumBottomUp = (xs, m) => {
       if(j===0) ys[xs[i]][j] = true
       else if(i===0) ys[xs[i]][j] = xs[i] === j
       else ys[xs[i]][j] = Boolean(ys[xs[i-1]] && (ys[xs[i-1]][j] || ys[xs[i-1]][j-xs[i]]))
+      if(ys[xs[i]][m]) return true
     }
   }
   return ys[xs[xs.length-1]][m]
@@ -69,6 +70,27 @@ test('subsetSumBottomUp', () => {
   expect(subsetSumBottomUp([1,4,7,9], 8)).toBeTruthy()
   expect(subsetSumBottomUp([1,4,7,9], 14)).toBeTruthy()
   expect(subsetSumBottomUp([1,4,7,9], 13)).toBeTruthy()
+})
+
+const subsetSumSet = (xs, n, m) => {
+  if(m === 0) return { res: true, set: [] }
+  if(n === -1) return { res: false, set: [] }
+  const r1 = subsetSumSet(xs, n-1, m-xs[n])
+  const r2 = subsetSumSet(xs, n-1, m)
+  return {
+    res: r1.res || r2.res,
+    set: r1.res ? [...r1.set, xs[n]] : r2.set
+  }
+}
+
+test('subsetSumSet', () => {
+  const all = (xs, ys) => xs.every(x => ys.includes(x)) && xs.length === ys.length
+  expect(subsetSumSet([1,4,7,9], 3, 6).res).toBeFalsy()
+  expect(subsetSumSet([3,4,9], 2, 8).res).toBeFalsy()
+  expect(all(subsetSumSet([1,4,7,9], 3, 5).set, [1,4])).toBeTruthy()
+  expect(all(subsetSumSet([1,4,7,9], 3, 8).set, [1,7])).toBeTruthy()
+  expect(all(subsetSumSet([1,4,7,9], 3, 14).set, [1,4,9])).toBeTruthy()
+  expect(all(subsetSumSet([1,4,7,9], 3, 13).set, [4,9])).toBeTruthy()
 })
 
 const potencia = (n, e) => {
