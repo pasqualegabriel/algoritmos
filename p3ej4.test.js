@@ -121,6 +121,21 @@ test('ejercicio 4 practica 3', () => {
   expect(ej4([4, 2, 2, 3], 7)).toBeFalsy()
 })
 
+const ej6 = monto => [50, 20, 10, 5, 2, 1].reduce(
+  (a, v) => {
+    const cantV = Math.floor(a.monto / v)
+    return { cant: a.cant + cantV, monto: a.monto - (cantV * v) }
+  }, 
+  { cant: 0, monto }
+).cant
+
+test('ejercicio 6 practica 3', () => {
+  expect(ej6(50)).toBe(1)
+  expect(ej6(53)).toBe(3)
+  expect(ej6(39)).toBe(5)
+  expect(ej6(143)).toBe(6)
+})
+
 const ej7 = (x, y, n) => {
   if(!n) return 0
   const p = n-1
