@@ -1,3 +1,12 @@
+// Precondicion: los cursos estan ordenados por hora de fin
+// const ej2 = (cursos, aulas) => {
+//   const res = Array.from({ length: 5 }, (_, i) => i+1)
+// }
+
+// test('ejercicio 2 practica greedy', () => {
+//   expect(ej2(51)[1]).toBe(2)
+// })
+
 const ej3 = monto => [20, 10, 5, 1].reduce(
   (a, v) => {
     const cantV = Math.floor(a.monto / v)

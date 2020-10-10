@@ -152,21 +152,40 @@ const potencia = (n, e) => {
 
 const evaluar = xs => xs.reduce((a, v, i) => v === '+' ? a + xs[i+1] : v === '*' ? a * xs[i+1] : v === '^' ? potencia(a, xs[i+1]) : a, xs[0])
 
+// const opretors = (xs, w, n) => {
+//   if(n === w && !xs.length) return true
+//   if(n === w || !xs.length) return false
+//   const e = xs[0]
+//   const ys = xs.slice(1)
+//   return opretors(ys, w, n+e) || opretors(ys, w, n*e) || opretors(ys, w, potencia(n, e))
+// }
+
 const opretors = (xs, w, n) => {
-  if(n === w && !xs.length) return true
-  if(n === w || !xs.length) return false
+  if(n === w && !xs.length) return { c: true, res: [] }
+  if(n === w || !xs.length) return { c: false, res: [] }
   const e = xs[0]
   const ys = xs.slice(1)
-  return opretors(ys, w, n+e) || opretors(ys, w, n*e) || opretors(ys, w, potencia(n, e))
+  const o1 = opretors(ys, w, n+e)
+  const o2 = opretors(ys, w, n*e)
+  const o3 = opretors(ys, w, potencia(n, e))
+  return o1.c 
+    ? { c: o1.c, res: ['+', ...o1.res] } 
+    : o2.c 
+      ? { c: o2.c, res: ['*', ...o2.res] } 
+      : { c: o3.c, res: ['^', ...o3.res] }
 }
 
 const ej4 = (xs, w) => opretors(xs.slice(1), w, xs[0])
 
 test('ejercicio 4 practica 3', () => {
+  const all = (xs, ys) => xs.every(x => ys.includes(x)) && xs.length === ys.length
   expect(evaluar([4, '+', 2, '^', 2, '*', 3])).toBe(36*3)
-  expect(ej4([4, 2, 2, 3], 36*3)).toBeTruthy()
-  expect(ej4([4, 2, 2, 3], 11)).toBeTruthy()
-  expect(ej4([4, 2, 2, 3], 7)).toBeFalsy()
+  expect(ej4([4, 2, 2, 3], 36*3).c).toBeTruthy()
+  expect(all(ej4([4, 2, 2, 3], 36*3).res, ['+', '^', '*'])).toBeTruthy()
+  expect(ej4([4, 2, 2, 3], 11).c).toBeTruthy()
+  expect(all(ej4([4, 2, 2, 3], 11).res, ['+', '+', '+'])).toBeTruthy()
+  expect(ej4([4, 2, 2, 3], 7).c).toBeFalsy()
+  expect(all(ej4([4, 2, 3], 11).res, ['*', '+'])).toBeTruthy()
 })
 
 const ej6 = monto => [50, 20, 10, 5, 2, 1].reduce(
