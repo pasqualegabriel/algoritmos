@@ -84,7 +84,7 @@ const subsetSumSet = (xs, n, m) => {
 }
 
 test('subsetSumSet', () => {
-  const all = (xs, ys) => xs.every(x => ys.includes(x)) && xs.length === ys.length
+  const all = (xs, ys) => xs.every((x, i) => x === ys[i]) && ys.every((x, i) => x === xs[i])
   expect(subsetSumSet([1,4,7,9], 3, 6).res).toBeFalsy()
   expect(subsetSumSet([3,4,9], 2, 8).res).toBeFalsy()
   expect(all(subsetSumSet([1,4,7,9], 3, 5).set, [1,4])).toBeTruthy()

@@ -152,6 +152,7 @@ const potencia = (n, e) => {
 
 const evaluar = xs => xs.reduce((a, v, i) => v === '+' ? a + xs[i+1] : v === '*' ? a * xs[i+1] : v === '^' ? potencia(a, xs[i+1]) : a, xs[0])
 
+// solo bool
 // const opretors = (xs, w, n) => {
 //   if(n === w && !xs.length) return true
 //   if(n === w || !xs.length) return false
@@ -175,10 +176,33 @@ const opretors = (xs, w, n) => {
       : { c: o3.c, res: ['^', ...o3.res] }
 }
 
+// Precondicion: la lista tiene al menos un elemento
 const ej4 = (xs, w) => opretors(xs.slice(1), w, xs[0])
 
+// ej4 bottom up
+// voy calculando cada nro agregando el resultado de ir +, * y ^ con su respectiva lista de operaciones
+// w = 34
+// 4| [4]  
+// 2| [6,8,16]
+// 2| [8,12,36,10,16,...,32,...]
+// 2| [10,16,...,34,...]
+
+const ej4BottomUp = (xs, w) => {
+  let set = [{ value: xs[0], res: [] }]
+  for(let i of xs.slice(1, xs.length)) {
+    const newSet = []
+    for(let j of set) {
+      newSet.push({ value: j.value+i, res: [...j.res, '+'] })
+      newSet.push({ value: j.value*i, res: [...j.res, '*'] })
+      newSet.push({ value: potencia(j.value,i), res: [...j.res, '^'] })
+    }
+    set = newSet
+  }
+  return set.find(e => e.value === w) || { res: [] }
+}
+
 test('ejercicio 4 practica 3', () => {
-  const all = (xs, ys) => xs.every(x => ys.includes(x)) && xs.length === ys.length
+  const all = (xs, ys) => xs.every((x, i) => x === ys[i]) && ys.every((x, i) => x === xs[i])
   expect(evaluar([4, '+', 2, '^', 2, '*', 3])).toBe(36*3)
   expect(ej4([4, 2, 2, 3], 36*3).c).toBeTruthy()
   expect(all(ej4([4, 2, 2, 3], 36*3).res, ['+', '^', '*'])).toBeTruthy()
@@ -186,6 +210,17 @@ test('ejercicio 4 practica 3', () => {
   expect(all(ej4([4, 2, 2, 3], 11).res, ['+', '+', '+'])).toBeTruthy()
   expect(ej4([4, 2, 2, 3], 7).c).toBeFalsy()
   expect(all(ej4([4, 2, 3], 11).res, ['*', '+'])).toBeTruthy()
+  expect(ej4([4, 3, -2], 10).c).toBeTruthy()
+  expect(all(ej4([4, 3, -2], 10).res, ['*', '+'])).toBeTruthy()
+
+  expect(ej4BottomUp([4, 2, 2, 3], 36*3).value).toBeTruthy()
+  expect(all(ej4BottomUp([4, 2, 2, 3], 36*3).res, ['+', '^', '*'])).toBeTruthy()
+  expect(ej4BottomUp([4, 2, 2, 3], 11).value).toBeTruthy()
+  expect(all(ej4BottomUp([4, 2, 2, 3], 11).res, ['+', '+', '+'])).toBeTruthy()
+  expect(ej4BottomUp([4, 2, 2, 3], 7).value).toBeFalsy()
+  expect(all(ej4BottomUp([4, 2, 3], 11).res, ['*', '+'])).toBeTruthy()
+  expect(ej4BottomUp([4, 3, -2], 10).value).toBeTruthy()
+  expect(all(ej4BottomUp([4, 3, -2], 10).res, ['*', '+'])).toBeTruthy()
 })
 
 const ej6 = monto => [50, 20, 10, 5, 2, 1].reduce(
