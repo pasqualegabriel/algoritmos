@@ -1,3 +1,5 @@
+const { min } = require('lodash')
+
 // ejercicio 2
 const coef1 = (n, m) => {
   if(n === m) return 1
@@ -223,19 +225,38 @@ test('ejercicio 4 practica 3', () => {
   expect(all(ej4BottomUp([4, 3, -2], 10).res, ['*', '+'])).toBeTruthy()
 })
 
-const ej6 = monto => [50, 20, 10, 5, 2, 1].reduce(
-  (a, v) => {
-    const cantV = Math.floor(a.monto / v)
-    return { cant: a.cant + cantV, monto: a.monto - (cantV * v) }
-  }, 
-  { cant: 0, monto }
-).cant
+// coins 9, 6, 5, 1
+const ej6 = monto => {
+  if(monto <= 0) return monto
+  const v1 = ej6(monto - 1)
+  const v2 = ej6(monto - 5)
+  const v3 = ej6(monto - 6)
+  const v4 = ej6(monto - 9)
+  const res = [v1, v2, v3, v4].filter(v => v >= 0)
+  if(!res.length) return false
+  return 1 + min(res)
+}
 
 test('ejercicio 6 practica 3', () => {
-  expect(ej6(50)).toBe(1)
-  expect(ej6(53)).toBe(3)
-  expect(ej6(39)).toBe(5)
-  expect(ej6(143)).toBe(6)
+  expect(ej6(11)).toBe(2)
+  expect(ej6(13)).toBe(3)
+})
+
+const ej6BottomUp = (coins, monto) => {
+  const res = { 0:{}, 1:{}, 2:{}, 3:{} }
+  for(i=0; i<coins.length; i++) {
+    for(j=0; j<=monto; j++) {
+      if(!i) res[i][j] = j < coins[i] ? 0 : Math.floor(j / coins[i])
+      else if(coins[i] > j) res[i][j] = res[i-1][j]
+      else res[i][j] = Math.min(res[i-1][j], 1 + res[i][j-coins[i]])
+    }
+  }
+  return res[coins.length-1][monto]
+}
+
+test('ejercicio 6 practica 3 bottom up', () => {
+  expect(ej6BottomUp([1,5,6,9], 11)).toBe(2)
+  expect(ej6BottomUp([1,5,6,9], 13)).toBe(3)
 })
 
 // const ej7 = (x, y, n) => {

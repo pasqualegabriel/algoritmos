@@ -25,3 +25,9 @@ test('ejercicio 3 practica greedy', () => {
   expect(ej3(18)[5]).toBe(1)
   expect(ej3(18)[1]).toBe(3)
 })
+
+// const mochila = (xs, t) => {
+//   if(!xs.length) return { res: [], valor: 0 }
+//   const ys = xs.slice(1, xs.length)
+//   const r1 = mochila(ys, t)
+// }
