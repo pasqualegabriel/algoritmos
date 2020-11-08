@@ -31,4 +31,4 @@ const upLeft = (res, i, j) => i===-1 || j===-1 ? false : res[i][j] || upLeft(res
 const downRight = (res, i, j, n) => i===n || j===n ? false : res[i][j] || downRight(res, i+1, j+1, n)
 const downLeft = (res, i, j, n) => i===n || j===-1 ? false : res[i][j] || downLeft(res, i+1, j-1, n)
 
-console.log(reinas(8))
+console.log(reinas(2))

@@ -226,20 +226,25 @@ test('ejercicio 4 practica 3', () => {
 })
 
 // coins 9, 6, 5, 1
-const ej6 = monto => {
+const ej6 = (coins, monto) => {
   if(monto <= 0) return monto
-  const v1 = ej6(monto - 1)
-  const v2 = ej6(monto - 5)
-  const v3 = ej6(monto - 6)
-  const v4 = ej6(monto - 9)
-  const res = [v1, v2, v3, v4].filter(v => v >= 0)
-  if(!res.length) return false
-  return 1 + min(res)
+  return 1 + min(coins.map(c => ej6(coins, monto - c)).filter(v => v >= 0))
 }
 
+// const ej6 = monto => {
+//   if(monto <= 0) return monto
+//   const v1 = ej6(monto - 1)
+//   const v2 = ej6(monto - 5)
+//   const v3 = ej6(monto - 6)
+//   const v4 = ej6(monto - 9)
+//   const res = [v1, v2, v3, v4].filter(v => v >= 0)
+//   if(!res.length) return false
+//   return 1 + min(res)
+// }
+
 test('ejercicio 6 practica 3', () => {
-  expect(ej6(11)).toBe(2)
-  expect(ej6(13)).toBe(3)
+  expect(ej6([9, 6, 5, 1], 11)).toBe(2)
+  expect(ej6([9, 6, 5, 1], 13)).toBe(3)
 })
 
 const ej6BottomUp = (coins, monto) => {
